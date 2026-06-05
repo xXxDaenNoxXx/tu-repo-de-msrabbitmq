@@ -1,5 +1,5 @@
 name: Build and Push Docker Image
- 
+
 on:
   push:
     branches:
@@ -32,20 +32,6 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-
-      - name: Debug SSH Key
-        run: |
-          ls -la ~/.ssh
-          file ~/.ssh/id_rsa
-          head -n 3 ~/.ssh/id_rsa
-          tail -n 3 ~/.ssh/id_rsa
-          ssh-keygen -y -f ~/.ssh/id_rsa
-
-      - name: Test SSH Connection
-        run: |
-          ssh -v -i ~/.ssh/id_rsa \
-          -o StrictHostKeyChecking=no \
-          ${{ secrets.USER_SERVER }}@${{ secrets.EC2_HOST }} "hostname"
 
       - name: Validate SSH Key
         run: |
