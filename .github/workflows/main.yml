@@ -1,14 +1,11 @@
-name: Build and Push Docker Image 
-
+name: Build and Push Docker Image
 on:
   push:
     branches:
       - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -41,7 +38,7 @@ jobs:
         run: |
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-            - name: Deploy to EC2
+      - name: Deploy to EC2
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.USER_SERVER }}@${{ secrets.EC2_HOST }} << EOF
           echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login \
@@ -58,16 +55,4 @@ jobs:
             -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
             -e AWS_REGION=${{ secrets.AWS_REGION }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
-          EOF
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
-
-          docker stop my-app || true
-          docker rm my-app || true
-
-          docker run -d \
-            --name my-app \
-            -p 8080:8080 \
-            --restart unless-stopped \
-            ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
-
           EOF
