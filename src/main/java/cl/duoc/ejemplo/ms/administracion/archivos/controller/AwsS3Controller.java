@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import cl.duoc.ejemplo.ms.administracion.archivos.dto.S3ObjectDto;
 import cl.duoc.ejemplo.ms.administracion.archivos.service.AwsS3Service;
+import cl.duoc.ejemplo.ms.administracion.archivos.service.EfsService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,6 +28,9 @@ public class AwsS3Controller {
 
 	@Autowired
 	private AwsS3Service awsS3Service;
+
+	@Autowired
+	private EfsService efsService;
 
 	/**
 	 * Lista todos los objetos en un bucket de S3
@@ -58,7 +62,7 @@ public class AwsS3Controller {
 	}
 
 	/**
-	 * Sube un archivo a S3
+	 * Sube un archivo a S3 y lo almacena en EFS
 	 * 
 	 * @param bucket Nombre del bucket
 	 * @param key    Clave del objeto
@@ -69,8 +73,17 @@ public class AwsS3Controller {
 	public ResponseEntity<Void> uploadObject(@PathVariable String bucket, @RequestParam String key,
 			@RequestParam("file") MultipartFile file) {
 
-		awsS3Service.upload(bucket, key, file);
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		try {
+
+			efsService.saveToEfs(key, file);
+
+			awsS3Service.upload(bucket, key, file);
+
+			return ResponseEntity.status(HttpStatus.CREATED).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().build();
+		}
 	}
 
 	/**

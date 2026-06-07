@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MsAdministracionArchivosApplication {
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(MsAdministracionArchivosApplication.class, args);
 	}
 }
