@@ -16,10 +16,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/msrabbitmq-0.0.1-SNAPSHOT.jar:latest .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/msrabbitmq:latest .
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/msrabbitmq-0.0.1-SNAPSHOT.jar:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/msrabbitmq:latest
       - name: Configure SSH Key
         run: |
           mkdir -p ~/.ssh
@@ -37,9 +37,9 @@ jobs:
           echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login \
             -u "${{ secrets.DOCKERHUB_USERNAME }}" \
             --password-stdin
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/msrabbitmq-0.0.1-SNAPSHOT.jar:latest
-          docker stop msrabbitmq-0.0.1-SNAPSHOT.jar || true
-          docker rm msrabbitmq-0.0.1-SNAPSHOT.jar || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/msrabbitmq:latest
+          docker stop msrabbitmq || true
+          docker rm msrabbitmq || true
           docker run -d \
             --name msrabbitmq-0.0.1-SNAPSHOT.jar \
             -p 8080:8081 \
@@ -49,5 +49,5 @@ jobs:
             -e AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }} \
             -e AWS_REGION=${{ secrets.AWS_REGION }} \
             -v /home/ec2-user/efs:/app/efs \
-            ${{ secrets.DOCKERHUB_USERNAME }}/msrabbitmq-0.0.1-SNAPSHOT.jar:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/msrabbitmq:latest
           EOF
