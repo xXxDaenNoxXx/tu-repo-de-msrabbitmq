@@ -12,6 +12,6 @@ FROM eclipse-temurin:22-jdk
 
 COPY --from=buildstage /app/target/msrabbitmq-1.0.0.jar /app/app.jar
 
-EXPOSE 8080
+EXPOSE 8081
 
 CMD ["java", "-jar", "/app/app.jar"]
