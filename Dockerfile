@@ -10,7 +10,7 @@ RUN mvn clean package
 
 FROM eclipse-temurin:22-jdk
 
-COPY --from=buildstage /app/target/ms-administracion-archivos-1.0.0.jar /app/app.jar
+COPY --from=buildstage /app/target/tu-repo-de-msrabbitmq-1.0.0.jar /app/app.jar
 
 EXPOSE 8080
 
