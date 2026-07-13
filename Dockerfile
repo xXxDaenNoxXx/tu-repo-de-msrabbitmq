@@ -10,7 +10,7 @@ RUN mvn clean package
 
 FROM eclipse-temurin:22-jdk
 
-COPY --from=buildstage /app/target/msrabbitmq-1.0.0.jar /app/app.jar
+COPY --from=buildstage /app/target/msrabbitmq-0.0.1-SNAPSHOT.jar /app/app.jar
 
 EXPOSE 8081
 
